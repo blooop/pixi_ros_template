@@ -20,7 +20,7 @@ build = "colcon build --build-base .pixi/build --install-base .pixi/install --sy
 clean = "colcon clean workspace -y --build-base .pixi/build --install-base .pixi/install"
 test = { cmd = "colcon test --build-base .pixi/build --install-base .pixi/install", depends-on = "build" }
 lint = "pre-commit run --all-files"
-fix-commit-push = { cmd = "git commit -applied pre-commit'", depends-on = [
+fix-commit-push = { cmd = "git commit -am 'applied pre-commit'", depends-on = [
     "lint",
 ] }
 
