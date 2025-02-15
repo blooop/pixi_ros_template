@@ -50,6 +50,14 @@ pixi run your_arbitrary_task
 - `ci`
 - `lint`
 
+# Demo
+
+The main repo is left empty so that you can put your own ros packages there.  If you want to be able to try running the code with some packages that are already set up check out this branch
+
+https://github.com/blooop/pixi_ros_template/tree/demo/turtlesim
+
+which is directly based on https://github.com/ruben-arts/turtlesim-pixi
+
 # Troubleshooting
 
 If you get errors related to pixi
