@@ -20,11 +20,16 @@ turtlesim = "ros2 run turtlesim turtlesim_node"
 teleop = "ros2 run turtlesim turtle_teleop_key"
 
 # Custom commands to make using the colcon env easier
+ci = { cmd = "echo ci has passed!", depends-on = ["lint", "test"] }
 build = "colcon build --build-base .pixi/build --install-base .pixi/install --symlink-install"
 clean = "colcon clean workspace -y --build-base .pixi/build --install-base .pixi/install"
 test = { cmd = "colcon test --build-base .pixi/build --install-base .pixi/install", depends-on = "build" }
+
 lint = "pre-commit run --all-files"
-ci = { cmd = "echo ci has passed!", depends-on = ["lint", "test"] }
+
+fix-commit-push = { cmd = "git commit -applied pre-commit'", depends-on = [
+    "lint",
+] }
 # This depends on build but the first time the build is run it generates the activation script. So please run after build.
 square_py = { cmd = "ros2 run turtle_controller_cpp_py draw_square", depends-on = "build" }
 circle_cpp = { cmd = "ros2 run turtle_controller_cpp_py draw_circle", depends-on = "build" }
