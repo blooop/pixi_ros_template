@@ -1,7 +1,7 @@
 [project]
-name = "turtlesim-pixi"
+name = "pixi_ros_template"
 version = "0.1.0"
-description = "ultra fast turtlesim installation on multiple platforms"
+description = "A template pixi ros environment"
 authors = [
     "Austin Gregg-Smith <blooop@gmail.com>",
     "Ruben Arts <ruben.arts@hotmail.com>",
@@ -12,30 +12,29 @@ platforms = ["linux-64"]
 # ROS workspace activation
 [target.unix.activation]
 scripts = [".pixi/install/setup.sh"]
-# [target.win.activation]
-# scripts = [".pixi/install/setup.bat"]
 
 [tasks]
-turtlesim = "ros2 run turtlesim turtlesim_node"
-teleop = "ros2 run turtlesim turtle_teleop_key"
-
-# Custom commands to make using the colcon env easier
+#General Workspace tasks for all projects
 ci = { cmd = "echo ci has passed!", depends-on = ["lint", "test"] }
 build = "colcon build --build-base .pixi/build --install-base .pixi/install --symlink-install"
 clean = "colcon clean workspace -y --build-base .pixi/build --install-base .pixi/install"
 test = { cmd = "colcon test --build-base .pixi/build --install-base .pixi/install", depends-on = "build" }
-
 lint = "pre-commit run --all-files"
-
 fix-commit-push = { cmd = "git commit -applied pre-commit'", depends-on = [
     "lint",
 ] }
+
+#Custom tasks for this project
+turtlesim = "ros2 run turtlesim turtlesim_node"
+teleop = "ros2 run turtlesim turtle_teleop_key"
+
 # This depends on build but the first time the build is run it generates the activation script. So please run after build.
 square_py = { cmd = "ros2 run turtle_controller_cpp_py draw_square", depends-on = "build" }
 circle_cpp = { cmd = "ros2 run turtle_controller_cpp_py draw_circle", depends-on = "build" }
 circle_py_only = { cmd = "ros2 run turtle_controller_py controller", depends-on = "build" }
 square = { cmd = "ros2 launch turtle_controller_cpp_py draw_square.launch.py", depends-on = "build" }
 start = { depends-on = ["square"] }
+
 
 [dependencies]
 ros-humble-desktop = "0.10.0.*"

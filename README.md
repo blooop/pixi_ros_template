@@ -47,6 +47,8 @@ pixi run your_arbitrary_task
 - `build`
 - `test`
 - `clean`
+- `ci`
+- `lint`
 
 # Troubleshooting
 
