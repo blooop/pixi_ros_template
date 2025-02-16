@@ -3,3 +3,7 @@ repositories:
     type: git
     url: https://github.com/AndrejOrsula/pymoveit2.git
     version: master
+  ext/moveit2_tutorials:
+    type: git
+    url: https://github.com/ros-planning/moveit2_tutorials
+    version: humble
