@@ -15,6 +15,14 @@ scripts = [".pixi/install/setup.sh"]
 
 [tasks]
 #General Workspace tasks for all projects
+
+vcs = "vcs import . < depend.repos"
+rosdep-init = { cmd = "rosdep init || true && rosdep update" }
+rosdep = { cmd = "rosdep install --from-paths . --ignore-src -r -y", depends-on = [
+    "rosdep-init",
+] }
+setup = { depends-on = ["vcs", "rosdep"] }
+
 ci = { cmd = "echo ci has passed!", depends-on = ["lint", "test"] }
 build = "colcon build --build-base .pixi/build --install-base .pixi/install --symlink-install"
 clean = "colcon clean workspace -y --build-base .pixi/build --install-base .pixi/install"
@@ -26,7 +34,6 @@ fix-commit-push = { cmd = "git commit -am 'applied pre-commit'; git push", depen
 
 #Custom tasks for this project
 #add them here
-
 
 [dependencies]
 ros-humble-desktop = "0.10.0.*"
@@ -46,6 +53,8 @@ ros-humble-ament-cmake-gtest = ">=1.3.2,<2"
 pytest = "<7"
 pre-commit = "*"
 gcc = "*"
+rosdep = "*"
 
 [pypi-dependencies]
 colcon-clean = "*"
+vcstool = "*"
