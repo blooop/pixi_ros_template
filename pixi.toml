@@ -38,6 +38,7 @@ fix-commit-push = { cmd = "git commit -am 'applied pre-commit'; git push", depen
 [dependencies]
 ros-humble-desktop = "0.10.0.*"
 ros-humble-ament-cmake-auto = "*"
+ros-humble-moveit = "*"
 
 colcon-core = "*"
 colcon-ros = "*"
