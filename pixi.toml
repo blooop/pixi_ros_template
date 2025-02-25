@@ -54,6 +54,7 @@ pre-commit = "*"
 gcc = "*"
 
 ros-humble-turtlesim = "1.4.2.*"
+rosdep="*"
 
 [pypi-dependencies]
 colcon-clean = "*"
