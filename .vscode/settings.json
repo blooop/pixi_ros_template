@@ -1,0 +1,36 @@
+{
+	"python.testing.pytestArgs": [],
+	"python.testing.unittestEnabled": false,
+	"python.testing.pytestEnabled": true,
+	"[python]": {
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.formatOnSave": true
+	},
+	"files.exclude": {
+		"**/__pycache__/**": true
+	},
+	"python.analysis.autoImportCompletions": false,
+	"cmake.configureOnOpen": false,
+	"python.autoComplete.extraPaths": [
+		"/workspaces/pixirostemplate/install/example_py_node/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/install/example_msgs/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/install/example_interfaces/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/build/example_py_node",
+		"/workspaces/pixirostemplate/.pixi/install/example_py_node/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/install/example_msgs/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/install/example_interfaces/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/envs/default/lib/python311/site-packages",
+		"/workspaces/pixirostemplate/.pixi/envs/default/lib/python3.11/site-packages"
+	],
+	"python.analysis.extraPaths": [
+		"/workspaces/pixirostemplate/install/example_py_node/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/install/example_msgs/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/install/example_interfaces/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/build/example_py_node",
+		"/workspaces/pixirostemplate/.pixi/install/example_py_node/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/install/example_msgs/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/install/example_interfaces/lib/python3.11/site-packages",
+		"/workspaces/pixirostemplate/.pixi/envs/default/lib/python311/site-packages",
+		"/workspaces/pixirostemplate/.pixi/envs/default/lib/python3.11/site-packages"
+	]
+}

@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.pylint",
+    "njpwerner.autodocstring",
+    "charliermarsh.ruff",
+    "mhutchie.git-graph",
+    "tamasfe.even-better-toml",
+    "ms-azuretools.vscode-docker",
+    "ryanluker.vscode-coverage-gutters",
+    "jjjermiah.pixi-vscode",
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "twxs.cmake",
+    "ms-iot.vscode-ros"
+  ]
+}

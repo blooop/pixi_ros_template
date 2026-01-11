@@ -1,0 +1,14 @@
+# Colcon defaults configuration
+# This file is used by colcon-runner (cr command)
+build:
+  symlink-install: true
+  build-base: .pixi/build
+  install-base: .pixi/install
+  cmake-args:
+    - "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+    - "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+test:
+  build-base: .pixi/build
+  install-base: .pixi/install
+  pytest-with-coverage: true
+  return-code-on-test-failure: true

@@ -1,51 +1,130 @@
-[project]
+[workspace]
 name = "pixi_ros_template"
 version = "0.1.0"
-description = "A template pixi ros environment"
+description = "A pixi-based ROS2 workspace with devcontainer support"
 authors = [
     "Austin Gregg-Smith <blooop@gmail.com>",
     "Ruben Arts <ruben.arts@hotmail.com>",
 ]
-channels = ["conda-forge", "robostack-humble"]
+channels = ["robostack-staging", "conda-forge", "robostack-humble"]
 platforms = ["linux-64"]
 
-# ROS workspace activation
-[target.unix.activation]
-scripts = [".pixi/install/setup.sh"]
+# ROS workspace activation - sources both conda ROS and local workspace
+[activation]
+scripts = ["activation.sh"]
 
 [tasks]
-#General Workspace tasks for all projects
-ci = { cmd = "echo ci has passed!", depends-on = ["lint", "test"] }
-build = "colcon build --build-base .pixi/build --install-base .pixi/install --symlink-install"
-clean = "colcon clean workspace -y --build-base .pixi/build --install-base .pixi/install"
-test = { cmd = "colcon test --build-base .pixi/build --install-base .pixi/install", depends-on = "build" }
-lint = "pre-commit run --all-files"
-fix-commit-push = { cmd = "git commit -am 'applied pre-commit'; git push", depends-on = [
-    "lint",
-] }
+# ROS2 Build Tasks
+clean = "rm -rf .pixi/build .pixi/install log"
+build = "./scripts/build.sh"
+build-cr = "cr b"
 
-#Custom tasks for this project
-#add them here
+# Repository Management
+import-repos = "vcs import src < depend.repos"
+install-deps = "rosdep install --from-paths src --ignore-src -r -y"
 
+# ROS2 Testing Tasks
+test-workspace = "pytest test -v"
+test-colcon = "colcon test --build-base .pixi/build --install-base .pixi/install"
+test-cr = "cr t"
+test-results = "colcon test-result --verbose --test-result-base .pixi/build"
+test = { depends-on = ["build", "test-workspace", "test-colcon", "test-results"] }
+
+# Linting Tasks
+lint-python = "ruff check src --fix"
+lint-python-format = "ruff format src"
+lint-cpp = "find src -name '*.cpp' -o -name '*.hpp' | xargs -r clang-format -i || true"
+lint-pre-commit = "pre-commit run --all-files"
+lint = { depends-on = ["lint-python-format", "lint-python", "lint-cpp", "lint-pre-commit"] }
+
+# Setup Tasks
+setup = { depends-on = ["import-repos", "install-deps"] }
+
+# Combined CI Tasks
+ci = { cmd = "echo CI passed!", depends-on = ["clean", "build", "lint", "test"] }
+ci-full = { depends-on = ["clean", "setup", "build", "lint", "test"] }
+ci-quick = { depends-on = ["build", "lint", "test-colcon"] }
+
+# Utility Tasks
+update-lock = "pixi update && git commit -a -m'update pixi.lock' || true"
+clear-pixi = "rm -rf .pixi pixi.lock"
+setup-git-merge-driver = "git config merge.ourslock.driver true"
+fix-commit-push = { cmd = "git commit -am 'applied pre-commit'; git push", depends-on = ["lint"] }
 
 [dependencies]
-ros-humble-desktop = "0.10.0.*"
+# Python - pinned for reproducibility
+python = "3.11.*"
+numpy = "1.26.*"
+libpython-static = "*"
+
+# ROS2 Core - pinned to humble versions
+ros-humble-desktop = "0.10.*"
+ros-humble-ament-cmake = "1.3.*"
 ros-humble-ament-cmake-auto = "*"
+ros-humble-ament-cmake-python = "*"
+ros-humble-ament-cmake-gtest = ">=1.3.2,<2"
 
-colcon-core = "*"
-colcon-ros = "*"
+# Message generation
+ros-humble-rosidl-default-generators = "*"
+ros-humble-rosidl-default-runtime = "*"
 
-# Limit setup tools to avoid deprecation warning. https://answers.ros.org/question/396439/setuptoolsdeprecationwarning-setuppy-install-is-deprecated-use-build-and-pip-and-other-standards-based-tools/
+# Build tools - pinned for reproducibility
+colcon-common-extensions = "0.3.*"
+vcs2l = "1.1.*"
+compilers = "1.11.*"
+# Pin cmake to a version compatible with ROS2 humble (CMake 3.31+ has FindPython issues)
+cmake = "3.25.2.*"
+ninja = "1.13.*"
+pkg-config = "0.29.*"
+gcc = "14.*"
+
+# Limit setuptools to avoid deprecation warning
+# https://answers.ros.org/question/396439/setuptoolsdeprecationwarning-setuppy-install-is-deprecated-use-build-and-pip-and-other-standards-based-tools/
 setuptools = "<=58.2.0"
 
-# Needed to get the correct compiled result including the RPATH set for the conda environment lib folder.
-compilers = "1.6.0.*"
-pkg-config = "0.29.2.*"
-cmake = "3.25.2.*"
-ros-humble-ament-cmake-gtest = ">=1.3.2,<2"
-pytest = "<7"
-pre-commit = "*"
-gcc = "*"
+# Dev tools - pinned for reproducibility
+fzf = "0.67.*"
+fd-find = "10.*"
+ripgrep = "15.*"
+vim = "9.*"
+git = "2.*"
+curl = "8.*"
+wget = "1.21.*"
+clang-format = "21.*"
 
 [pypi-dependencies]
-colcon-clean = "*"
+colcon-clean = ">=0.2.1"
+colcon-runner = ">=0.8.1"
+pytest = ">=9.0.0"
+pytest-cov = ">=7.0.0"
+ruff = ">=0.14.0"
+coverage = ">=7.13.0"
+pyyaml = ">=6.0"
+pre-commit = ">=4.0.0"
+
+[tool.ruff]
+line-length = 120
+exclude = ["build", "install", ".pixi"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["test", "src"]
+python_files = ["test_*.py"]
+
+[tool.coverage.run]
+omit = ["*/test/*", "__init__.py"]
+
+[tool.coverage.report]
+exclude_also = [
+  "def __repr__",
+  "if False:",
+  "if 0:",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "pass",
+  "(_):",
+]
