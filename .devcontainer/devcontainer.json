@@ -28,6 +28,7 @@
 	},
 	"mounts": [
 		"source=${localWorkspaceFolderBasename}-pixi,target=${containerWorkspaceFolder}/.pixi,type=volume",
+		"source=${localWorkspaceFolderBasename}-ccache,target=/home/vscode/.cache/ccache,type=volume",
 		"source=${localEnv:HOME}/.cache/rattler,target=/home/vscode/.cache/rattler,type=bind,consistency=cached"
 	],
 	"runArgs": [
@@ -38,5 +39,5 @@
 		"QT_X11_NO_MITSHM": "1",
 		"LIBGL_ALWAYS_SOFTWARE": "1"
 	},
-	"postCreateCommand": "sudo chown -R vscode /home/vscode/.cache/rattler 2>/dev/null || true && sudo chown vscode .pixi && pixi install && mkdir -p src && pixi run import-repos"
+	"postCreateCommand": "sudo chown -R vscode /home/vscode/.cache/rattler 2>/dev/null || true && sudo chown -R vscode /home/vscode/.cache/ccache 2>/dev/null || true && sudo chown vscode .pixi && pixi install && mkdir -p src && pixi run import-repos"
 }

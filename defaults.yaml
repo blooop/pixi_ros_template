@@ -1,5 +1,6 @@
 # Colcon defaults configuration
-# This file is used by colcon-runner (cr command)
+# This file is used by colcon-runner (cr command) and colcon directly
+# See: https://colcon.readthedocs.io/en/released/user/configuration.html
 build:
   symlink-install: true
   build-base: .pixi/build
@@ -7,8 +8,12 @@ build:
   cmake-args:
     - "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
     - "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+    - "-DCMAKE_C_COMPILER_LAUNCHER=ccache"
+    - "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 test:
   build-base: .pixi/build
   install-base: .pixi/install
   pytest-with-coverage: true
   return-code-on-test-failure: true
+test-result:
+  test-result-base: .pixi/build

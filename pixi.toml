@@ -16,8 +16,7 @@ scripts = ["activation.sh"]
 [tasks]
 # ROS2 Build Tasks
 clean = "rm -rf .pixi/build .pixi/install log"
-build = "./scripts/build.sh"
-build-cr = "cr b"
+build = "cr b"
 
 # Repository Management
 import-repos = "vcs import src < depend.repos"
@@ -25,9 +24,8 @@ install-deps = "rosdep install --from-paths src --ignore-src -r -y"
 
 # ROS2 Testing Tasks
 test-workspace = "pytest test -v"
-test-colcon = "colcon test --build-base .pixi/build --install-base .pixi/install"
-test-cr = "cr t"
-test-results = "colcon test-result --verbose --test-result-base .pixi/build"
+test-colcon = "cr t"
+test-results = "colcon test-result --verbose"
 test = { depends-on = ["build", "test-workspace", "test-colcon", "test-results"] }
 
 # Linting Tasks
@@ -44,6 +42,10 @@ setup = { depends-on = ["import-repos", "install-deps"] }
 ci = { cmd = "echo CI passed!", depends-on = ["clean", "build", "lint", "test"] }
 ci-full = { depends-on = ["clean", "setup", "build", "lint", "test"] }
 ci-quick = { depends-on = ["build", "lint", "test-colcon"] }
+
+# ccache Tasks
+ccache-stats = "ccache -s"
+ccache-clear = "ccache -C"
 
 # Utility Tasks
 update-lock = "pixi update && git commit -a -m'update pixi.lock' || true"
@@ -81,6 +83,9 @@ gcc = "14.*"
 # Limit setuptools to avoid deprecation warning
 # https://answers.ros.org/question/396439/setuptoolsdeprecationwarning-setuppy-install-is-deprecated-use-build-and-pip-and-other-standards-based-tools/
 setuptools = "<=58.2.0"
+
+# Build acceleration
+ccache = "4.*"
 
 # Dev tools - pinned for reproducibility
 fzf = "0.67.*"
